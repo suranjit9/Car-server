@@ -31,7 +31,7 @@ const client = new MongoClient(uri, {
 const verifyToken = async (req, res, next)=>{
   // const token = req.cookies?.token;
   const token = req.cookies?.token;
-  console.log('leee', token)
+  // console.log('leee', token)
   if (!token) {
     return res.status(401).send({message: 'Unauthorized'})
   }
@@ -86,12 +86,12 @@ async function run() {
       res.send(result)
     })
     // Booking List Get..............
-    app.get("/BookingOrder",verifyToken, async(req, res)=>{
+    app.get("/BookingOrder",verifyToken,  async(req, res)=>{
       
       // console.log(req.query.email)
-      console.log('likioooooooooooooo', req.cookies.token)
+      // console.log('likioooooooooooooo', req.cookies.token)
       if (req.query.email !== req.user.email) {
-        return  res.status(403).send({message: 'Forbiden'})
+        return  res.status(403).send({message: 'XForbiden'})
       }
       let query = {};
       if (req.query?.email) {
@@ -120,12 +120,12 @@ async function run() {
       };
       const result = await Bookingrcollection.updateOne(filters, updateDoc);
       res.send(result)
-      console.log(ubDatedBook)
+      // console.log(ubDatedBook)
     })
     // Sing Up User data
     app.post("/user", async(req, res)=>{
       const user = req.body;
-      console.log(user)
+      // console.log(user)
       const result = await usercollection.insertOne(user);
       res.send(result);
     })
@@ -152,7 +152,7 @@ async function run() {
     // JWT Token
     app.post("/jwt", async(req, res)=>{
       const user = req.body;
-      console.log(user);
+      // console.log(user);
       // token genaret s
       const token = jwt.sign(user, process.env.Token_Pass, {expiresIn: "1h"})
       res
@@ -163,6 +163,11 @@ async function run() {
 
       })
       .send({Success: true})
+    })
+    app.post('/logout', async(req, res)=>{
+      const user = req.body;
+      console.log('user token ', user);
+      res.clearCookie('token', {maxAge: 0} ).send({Success: true})
     })
 
 
